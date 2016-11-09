@@ -6,6 +6,8 @@ using System.Web.Mvc;
 
 namespace BlogApp.Areas.Admin.Controllers
 {
+
+    [Authorize(Roles = "admin")]
     public class PostsController : Controller
     {
         // GET: Admin/Posts
