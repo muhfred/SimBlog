@@ -18,7 +18,7 @@ namespace BlogApp.Infrastructure
 
         public override void OnResultExecuting(ResultExecutingContext filterContext)
         {
-            
+            filterContext.Controller.ViewBag.SelectedTab = _selectedTab;
         }
     }
 }
