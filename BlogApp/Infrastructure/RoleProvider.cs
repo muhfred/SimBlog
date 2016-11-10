@@ -14,7 +14,7 @@ namespace BlogApp.Infrastructure
 
         public override string[] GetRolesForUser(string username)
         {
-           return new [] {"admin"};
+            return username == "nelson" ? new [] {"admin"} : new string[] {};
         }
 
         public override void CreateRole(string roleName)
