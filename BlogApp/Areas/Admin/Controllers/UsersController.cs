@@ -90,7 +90,7 @@ namespace BlogApp.Areas.Admin.Controllers
             var user = Database.Session.Load<User>(id);
             if (user == null)
                 return HttpNotFound();
-            return View(new UserEdit
+            return View(new UserResetPassword
             {
                 Username = user.Username
             });
