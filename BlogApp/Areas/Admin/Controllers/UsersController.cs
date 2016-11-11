@@ -31,7 +31,7 @@ namespace BlogApp.Areas.Admin.Controllers
             });
         }
 
-        [HttpPost]
+        [HttpPost, ValidateAntiForgeryToken]
         public ActionResult New(UsersNew form)
         {
             if(Database.Session.Query<User>().Any(u => u.Username == form.Username))
@@ -65,7 +65,7 @@ namespace BlogApp.Areas.Admin.Controllers
             });
         }
 
-        [HttpPost]
+        [HttpPost, ValidateAntiForgeryToken]
         public ActionResult Edit(int id, UserEdit form)
         {
             var user = Database.Session.Load<User>(id);
@@ -95,7 +95,7 @@ namespace BlogApp.Areas.Admin.Controllers
                 Username = user.Username
             });
         }
-        [HttpPost]
+        [HttpPost, ValidateAntiForgeryToken]
         public ActionResult ResetPassword(int id, UserResetPassword form)
         {
             var user = Database.Session.Load<User>(id);
@@ -113,7 +113,7 @@ namespace BlogApp.Areas.Admin.Controllers
             return RedirectToAction("index");
         }
 
-        [HttpPost]
+        [HttpPost, ValidateAntiForgeryToken]
         public ActionResult Delete(int id)
         {
             var user = Database.Session.Load<User>(id);
