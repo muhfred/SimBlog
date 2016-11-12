@@ -14,7 +14,7 @@ namespace BlogApp.Infrastructure
 
         public override string[] GetRolesForUser(string username)
         {
-            return username == "nelson" ? new [] {"admin"} : new string[] {};
+            return Auth.User.Roles.Select(role => role.Name).ToArray();
         }
 
         public override void CreateRole(string roleName)

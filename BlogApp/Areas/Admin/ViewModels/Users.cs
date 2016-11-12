@@ -7,6 +7,12 @@ using BlogApp.Models;
 
 namespace BlogApp.Areas.Admin.ViewModels
 {
+    public class RoleCkeckbox
+    {
+        public int Id { get; set; }
+        public bool IsChecked { get; set; }
+        public string Name { get; set; } 
+    }
     public class UsersIndex
     {
         public IEnumerable<User> Users { get; set; }
@@ -14,6 +20,7 @@ namespace BlogApp.Areas.Admin.ViewModels
 
     public class UsersNew
     {
+        public IList<RoleCkeckbox> Roles { get; set; }
         [Required, MaxLength(128)]
         public string Username { get; set; }
         [Required, DataType(DataType.Password)]
@@ -25,6 +32,7 @@ namespace BlogApp.Areas.Admin.ViewModels
 
     public class UserEdit
     {
+        public IList<RoleCkeckbox> Roles { get; set; }
         [Required, MaxLength(128)]
         public string Username { get; set; }
         [Required, MaxLength(256), DataType(DataType.EmailAddress)]
