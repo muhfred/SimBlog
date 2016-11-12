@@ -32,6 +32,8 @@ namespace BlogApp
             var mapper = new ModelMapper();
             mapper.AddMapping<UserMap>();
             mapper.AddMapping<RoleMap>();
+            mapper.AddMapping<PostMap>();
+            mapper.AddMapping<TagMap>();
 
             config.AddMapping(mapper.CompileMappingForAllExplicitlyAddedEntities());
 
