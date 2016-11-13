@@ -16,5 +16,21 @@
                 .append(antiForgeryInput)
                 .appendTo(document.body)
                 .submit();
+    });
+
+    $("[data-slug]").each(function () {
+        var $this = $(this);
+        var $sendSlugForm = $($this.data("slug"));
+
+        $sendSlugForm.keyup(function() {
+            var slug = $sendSlugForm.val();
+            slug = slug.replace(/[^a-zA-Z0-9\s]/g, "");
+            slug = slug.toLowerCase();
+            slug = slug.replace(/\s+/g, "-");
+
+            if (slug.charAt(slug.length - 1) == "-")
+                slug = slug.substr(0, slug.length - 1);
+            $this.val(slug);
         });
+    });
 });
