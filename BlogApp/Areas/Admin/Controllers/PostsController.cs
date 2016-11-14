@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using BlogApp.Areas.Admin.ViewModels;
 using BlogApp.Infrastructure;
+using BlogApp.Infrastructure.Extensions;
 using BlogApp.Models;
 using NHibernate.Linq;
 
@@ -37,7 +38,13 @@ namespace BlogApp.Areas.Admin.Controllers
         {
             return View("Form", new PostsForm
             {
-                IsNew = true
+                IsNew = true,
+                Tags = Database.Session.Query<Tag>().Select( tag => new TagCheckbox
+                {
+                    Id = tag.Id,
+                    Name = tag.Name,
+                    IsChecked = false
+                }).ToList()
             });
         }
 
@@ -52,7 +59,13 @@ namespace BlogApp.Areas.Admin.Controllers
                 PostId = id,
                 Content = post.Content,
                 Slug = post.Slug,
-                Title = post.Title
+                Title = post.Title,
+                Tags = Database.Session.Query<Tag>().Select(tag => new TagCheckbox
+                {
+                    Id = tag.Id,
+                    Name = tag.Name,
+                    IsChecked = post.Tags.Contains(tag)
+                }).ToList()
             });
 
         }
@@ -64,6 +77,8 @@ namespace BlogApp.Areas.Admin.Controllers
             if (!ModelState.IsValid)
                 return View(form);
 
+            var selectedTags = ReconsileTags(form.Tags).ToList();
+
             Post post;
             if (form.IsNew)
             {
@@ -72,6 +87,8 @@ namespace BlogApp.Areas.Admin.Controllers
                     CreatedAt = DateTime.UtcNow,
                     User = Auth.User
                 };
+                foreach (var tag in selectedTags)
+                    post.Tags.Add(tag);
             }
             else
             {
@@ -80,6 +97,12 @@ namespace BlogApp.Areas.Admin.Controllers
                     return HttpNotFound();
 
                 post.UpdatedAt = DateTime.UtcNow;
+
+                foreach (var toAdd in selectedTags.Where(t => !post.Tags.Contains(t)))
+                    post.Tags.Add(toAdd);
+
+                foreach (var toRemove in post.Tags.Where(t => !selectedTags.Contains(t)).ToList())
+                    post.Tags.Remove(toRemove);
             }
 
             post.Title = form.Title;
@@ -90,6 +113,8 @@ namespace BlogApp.Areas.Admin.Controllers
 
             return RedirectToAction("Index");
         }
+
+       
 
         [HttpPost, ValidateAntiForgeryToken]
         public ActionResult Trash(int id)
@@ -125,6 +150,33 @@ namespace BlogApp.Areas.Admin.Controllers
             post.DeletedAt = null;
             Database.Session.Update(post);
             return RedirectToAction("Index");
+        }
+
+        private IEnumerable<Tag> ReconsileTags(IEnumerable<TagCheckbox> tags)
+        {
+            foreach (var tag in tags.Where(t => t.IsChecked))
+            {
+                if (tag.Id != null)
+                {
+                    yield return Database.Session.Load<Tag>(tag.Id);
+                    continue;
+                }
+                var existingTag = Database.Session.Query<Tag>().FirstOrDefault(t => t.Name == tag.Name);
+                if (existingTag != null)
+                {
+                    yield return existingTag;
+                    continue;
+                }
+
+                var newTag = new Tag
+                {
+                    Name = tag.Name,
+                    Slug = tag.Name.Slugify()
+                };
+
+                Database.Session.Save(newTag);
+                yield return newTag;
+            }
         }
     }
 }
