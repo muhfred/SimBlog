@@ -77,7 +77,7 @@ namespace BlogApp.Areas.Admin.Controllers
             });
 
         }
-        [HttpPost, ValidateAntiForgeryToken]
+        [HttpPost, ValidateAntiForgeryToken, ValidateInput(false)]
         public ActionResult Form(PostsForm form)
         {
             form.IsNew = form.PostId == null;
