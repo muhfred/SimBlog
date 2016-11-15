@@ -27,6 +27,8 @@ namespace BlogApp
 
             routes.MapRoute("Home", "", new { controller = "Posts", action = "Index" }, namespaces);
 
+            routes.MapRoute("Sidebar", "", new {controller = "Layout", action = "Sidebar"}, namespaces);
+
             //routes.MapRoute(
             //    name: "Default",
             //    url: "{controller}/{action}/{id}",

@@ -17,7 +17,7 @@ namespace BlogApp.Areas.Admin.Controllers
     public class PostsController : Controller
     {
         private const int PostsPerPage = 10;
-        // GET: Admin/Posts
+
         public ActionResult Index(int page = 1)
         {
             var totalPostCount = Database.Session.Query<Post>().Count();
@@ -61,6 +61,7 @@ namespace BlogApp.Areas.Admin.Controllers
             var post = Database.Session.Load<Post>(id);
             if (post == null)
                 return HttpNotFound();
+
             return View("Form", new PostsForm
             {
                 IsNew = false,

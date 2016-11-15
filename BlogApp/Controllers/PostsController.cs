@@ -38,13 +38,13 @@ namespace BlogApp.Controllers
                 return HttpNotFound();
 
             if (!tag.Slug.Equals(parts.Item2, StringComparison.CurrentCultureIgnoreCase))
-                return RedirectToRoutePermanent("Tag", new { id = parts.Item1, slug = tag.Slug });
+                return RedirectToRoutePermanent("tag", new { id = parts.Item1, slug = tag.Slug });
 
             var totalPostCount = tag.Posts.Count();
 
             var postIds = tag.Posts
                 .OrderByDescending(g => g.CreatedAt)
-                .Skip((page - 1)*PostsPerPage)
+                .Skip((page - 1) * PostsPerPage)
                 .Take(PostsPerPage)
                 .Where(t => t.DeletedAt == null)
                 .Select(t => t.Id)
