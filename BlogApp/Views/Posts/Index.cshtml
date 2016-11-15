@@ -1,4 +1,7 @@
-﻿<h1>Posts Index</h1>
-<p>
-    <a href="@Url.RouteUrl("login")">Click here</a> to login!
-</p>
+﻿@model BlogApp.ViewModels.PostsIndex
+
+@{
+    ViewBag.Title = "Posts";
+}
+
+@Html.Partial("_Posts", Model.Posts)
